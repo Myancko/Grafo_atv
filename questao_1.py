@@ -16,8 +16,7 @@ def encontrar_caminhos_que_visitem_todos_os_nos(graph):
                 peso += graph[path[i]][path[i + 1]]['weight']
             else:
                 valid_path = False
-                break  # Break if there's no edge between nodes in the path
-        if valid_path:
+                break 
             caminhos_com_pesos.append((list(path), peso))
 
     return caminhos_com_pesos
