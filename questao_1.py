@@ -80,5 +80,4 @@ pos_texto_x = 0.85
 pos_texto_7 = 0.97  
 plt.text(pos_texto_x, pos_texto_7, f'caminho com menor peso: {peso_menor}', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes, bbox=dict(facecolor='white', alpha=0.8))
 
-
 plt.show()
