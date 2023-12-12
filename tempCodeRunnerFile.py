@@ -1,1 +1,0 @@
-caminhos_com_pesos = encontrar_caminhos_que_visitem_todos_os_nos(grafo)
