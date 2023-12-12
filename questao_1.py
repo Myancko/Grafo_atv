@@ -2,7 +2,6 @@ import itertools
 import networkx as nx
 import matplotlib.pyplot as plt
 
-
 def buscar_caminhos(graph):
     """
     Essa função procura por todos os caminhos, que passam por todos os pontos do grafo sem se repitir
