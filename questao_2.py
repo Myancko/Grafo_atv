@@ -3,21 +3,36 @@ import itertools
 import networkx as nx
 import matplotlib.pyplot as plt
 
-def encontrar_caminhos_que_visitem_todos_os_nos(graph):
+
+def buscar_caminhos(graph):
+    """
+    Essa função procura por todos os caminhos, que passam por todos os pontos do grafo sem se repitir
+    """
     caminhos_com_pesos = []
 
     nodes = list(graph.nodes())
     all_paths = itertools.permutations(nodes)
+
+    #print(all_paths)
+    #input('<stop>')
+
     count = 1
     count_check = 0
+    
     for path in all_paths:
+        
         os.system('cls')
-        print(f'{count_check} ta rodando'+ '.'*count)
+        print(f'ta rodando {count_check} de 20922789888000(~)'+'.'*count)
         count+=1
         count_check += 1
         if count == 4:
             count = 1
-            
+        
+        
+        #print(path[0])
+        if int(path[0]) != 1: #para iterar apenas nas possibilidades do primeiro digito
+            return caminhos_com_pesos
+        
         peso = 0
         valid_path = True
         for i in range(len(path) - 1):
@@ -25,7 +40,8 @@ def encontrar_caminhos_que_visitem_todos_os_nos(graph):
                 peso += graph[path[i]][path[i + 1]]['weight']
             else:
                 valid_path = False
-                break  
+                break 
+            
         if valid_path:
             caminhos_com_pesos.append((list(path), peso))
 
@@ -102,21 +118,18 @@ grafo.add_edge('16', '17', weight=26)
 #17
 grafo.add_edge('17', '18', weight=15)
 
-print(grafo.nodes())
+caminhos_com_pesos = buscar_caminhos(grafo)
 
-for edge in grafo.edges():
-    
-    u = edge[0]
-    v = edge[1]
-    print('peso', edge, 'vale', grafo[u][v]['weight'])
+menor = -1
 
-x = nx.adjacency_matrix(grafo)
-print(x.todense())
-
-print('ta rodando')
-caminhos_com_pesos = encontrar_caminhos_que_visitem_todos_os_nos(grafo)
-caminho_menor_peso = min(caminhos_com_pesos, key=lambda x: x[1])
-print('foi')
+for caminho in caminhos_com_pesos:
+    #percorre todos os caminhos para buscar qual possui o menor peso
+    if menor == -1:
+        menor = caminho
+    elif menor[1] > int(caminho[1]):
+        menor = caminho
+        
+plt.figure(figsize=(8, 6))
 
 count = 0
 for caminho in caminhos_com_pesos:
@@ -124,22 +137,24 @@ for caminho in caminhos_com_pesos:
     count += 1
     print(f"caminho {count}: {caminho}")
 
-arestas_caminho_menor_peso = [(caminho_menor_peso[0][i], caminho_menor_peso[0][i+1]) for i in range(len(caminho_menor_peso[0])-1)]
+peso_menor = menor[1]
 
-peso_menor = caminho_menor_peso[1]
-
-print('menor caminho:', caminho_menor_peso)
-
-plt.figure(figsize=(8, 6))
 pos = nx.spring_layout(grafo)
-nx.draw(grafo, pos=pos, with_labels=True, node_color='lightblue', node_size=500, font_weight='bold', font_size=12)
-nx.draw_networkx_edges(grafo, pos=pos, edgelist=arestas_caminho_menor_peso, edge_color='red', width=2)
-
 edge_labels = {(u, v): d['weight'] for u, v, d in grafo.edges(data=True)}
-nx.draw_networkx_edge_labels(grafo, pos=pos, edge_labels=edge_labels)
+arestas_caminho_menor_peso = [(menor[0][i], menor[0][i+1]) for i in range(len(menor[0])-1)]
 
-pos_texto_x = 0.85 
-pos_texto_7 = 0.97  
-plt.text(pos_texto_x, pos_texto_7, f'caminho com menor peso: {peso_menor}', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes, bbox=dict(facecolor='white', alpha=0.8))
+print(arestas_caminho_menor_peso, peso_menor)
+
+nx.draw(grafo, pos=pos, with_labels=True, node_color='lightblue', node_size=500, font_weight='bold', font_size=12)  #desenha o grafo inicial
+nx.draw_networkx_edges(grafo, pos=pos, edgelist=arestas_caminho_menor_peso, edge_color='red', width=2) #desenha caminho mais curto
+nx.draw_networkx_edge_labels(grafo, pos=pos, edge_labels=edge_labels) # desenha o peso de cada caminho sobre o que ja foi desenhado
+
+plt.text(0.90,
+         0.95,
+         f'Menor peso: {peso_menor}',
+         horizontalalignment='center',
+         verticalalignment='center',
+         transform=plt.gca().transAxes, 
+         bbox=dict(facecolor='white', alpha=0.8))
 
 plt.show()
