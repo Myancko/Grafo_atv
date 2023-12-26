@@ -1,0 +1,2 @@
+vertice = 'pontinho'
+aresta = 'linha'

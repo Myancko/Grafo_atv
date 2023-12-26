@@ -1,6 +1,9 @@
 import itertools
 import networkx as nx
 import matplotlib.pyplot as plt
+import time
+
+start_time = time.time()
 
 def buscar_caminhos(graph):
     """
@@ -62,14 +65,12 @@ for caminho in caminhos_com_pesos:
 peso_menor = menor[1]
 
 pos = nx.spring_layout(grafo)
-edge_labels = {(u, v): d['weight'] for u, v, d in grafo.edges(data=True)}
+vertices = {(u, v): d['weight'] for u, v, d in grafo.edges(data=True)}
 arestas_caminho_menor_peso = [(menor[0][i], menor[0][i+1]) for i in range(len(menor[0])-1)]
 
-print(arestas_caminho_menor_peso, peso_menor)
-
-nx.draw(grafo, pos=pos, with_labels=True, node_color='lightblue', node_size=500, font_weight='bold', font_size=12)  #desenha o grafo inicial
-nx.draw_networkx_edges(grafo, pos=pos, edgelist=arestas_caminho_menor_peso, edge_color='red', width=2) #desenha caminho mais curto
-nx.draw_networkx_edge_labels(grafo, pos=pos, edge_labels=edge_labels) # desenha o peso de cada caminho sobre o que ja foi desenhado
+nx.draw(grafo, pos=pos, with_labels=True, node_color='lightblue', node_size=500, font_weight='bold', font_size=12)  
+nx.draw_networkx_edges(grafo, pos=pos, edgelist=arestas_caminho_menor_peso, edge_color='yellow', width=2) 
+nx.draw_networkx_edge_labels(grafo, pos=pos, edge_labels=vertices)
 
 plt.text(0.90,
          0.95,
@@ -78,5 +79,12 @@ plt.text(0.90,
          verticalalignment='center',
          transform=plt.gca().transAxes, 
          bbox=dict(facecolor='white', alpha=0.8))
+
+print("caminho mais rapido:", arestas_caminho_menor_peso, "peso:", peso_menor)
+inverted_list = [(y, x) for x, y in arestas_caminho_menor_peso[::-1]]
+print("caminho de volta:", inverted_list)
+end_time = time.time()
+execution_time = end_time - start_time
+print(f"Execution time: {execution_time} seconds")
 
 plt.show()
