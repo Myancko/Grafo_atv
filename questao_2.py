@@ -164,7 +164,12 @@ print("caminho de volta:", inverted_list)
 
 end_time = time.time()
 execution_time = end_time - start_time
-print(f"Execution time: {execution_time} seconds")
+print(f"Tempo de execução: {execution_time}")
 
 
 plt.show()
+
+
+"""
+45.35536336898804
+"""

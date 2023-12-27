@@ -4,30 +4,33 @@ import time
 
 start_time = time.time()
 
-def prim_mst(graph):
-    mst = set()
+def prim_agm(graph):
+    agm = set()
     vertices = list(graph.keys())
     if not vertices:
-        return mst
+        return agm
     
-    mst.add(vertices[0])
-    mst_edges = []
+    agm.add(vertices[0])
+    agm_edges = []
     
-    while len(mst) < len(vertices):
+    while len(agm) < len(vertices):
         min_edge = None
         min_weight = float('inf')
         
-        for vertex in mst:
-            for neighbor, weight in graph[vertex].items():
-                if neighbor not in mst and weight < min_weight:
+        for vertices in agm:
+            
+            print(vertices)
+            
+            for neighbor, weight in graph[vertices].items():
+                if neighbor not in agm and weight < min_weight:
                     min_weight = weight
-                    min_edge = (vertex, neighbor)
+                    min_edge = (vertices, neighbor)
         
         if min_edge:
-            mst.add(min_edge[1])
-            mst_edges.append(min_edge)
+            agm.add(min_edge[1])
+            agm_edges.append(min_edge)
     
-    return mst_edges
+    return agm_edges
 
 graph = {
     '1': {'2': 20, '12': 29, '8': 29},
@@ -50,7 +53,7 @@ graph = {
     '18': {}
 }
 
-prim = prim_mst(graph)
+prim = prim_agm(graph)
 
 G = nx.Graph()
 
@@ -61,7 +64,7 @@ for node in graph:
 for edge in prim:
     G.add_edge(edge[0], edge[1], weight=graph[edge[0]][edge[1]])
 
-pos = nx.spring_layout(G)
+pos = nx.spring_layout(G, seed=245)
 nx.draw(G, pos, with_labels=True, node_size=500, font_weight='bold')
 edge_labels = {(u, v): d['weight'] for u, v, d in G.edges(data=True) if 'weight' in d}
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)

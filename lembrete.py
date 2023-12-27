@@ -1,2 +1,2 @@
-vertice = 'pontinho'
-aresta = 'linha'
+node, vertex, vertice = 'pontinho'
+edge, aresta = 'linha'

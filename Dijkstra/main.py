@@ -7,12 +7,18 @@ start_time = time.time()
 
 def dijkstra(graph, start, end):
     distances = {node: float('inf') for node in graph}
+    
+    print(distances, '<<<<')
     distances[start] = 0
     pq = [(0, start)]
     previous = {node: None for node in graph}
     
     while pq:
+        
         current_distance, current_node = heapq.heappop(pq)
+        
+        print('estamos aq:', current_node, "peso atual:",current_distance, '><><><>')
+        print(pq, 'valor armazena dos vizinho')
         if current_node == end:
             break
         
@@ -23,6 +29,7 @@ def dijkstra(graph, start, end):
             distance = current_distance + weight
             
             if distance < distances[neighbor]:
+                print(distance,'<>',distances[neighbor], 'valor atual', current_node)
                 distances[neighbor] = distance
                 previous[neighbor] = current_node
                 heapq.heappush(pq, (distance, neighbor))
@@ -53,8 +60,8 @@ graph = {
     '17': {'18': 15},
     '18': {}
 }
-start_node = '2'
-end_node = '14'
+start_node = '1'
+end_node = '18'
 shortest_path = dijkstra(graph, start_node, end_node)
 
 G = nx.Graph()
@@ -68,7 +75,7 @@ for node, edges in graph.items():
     for edge, weight in edges.items():
         G.add_edge(node, edge, weight=weight)
 
-pos = nx.spring_layout(G, seed=100)
+pos = nx.spring_layout(G, seed=244)
 
 
 edge_colors = ['black' if not edge in zip(shortest_path, shortest_path[1:]) else 'red' for edge in G.edges()]
@@ -82,7 +89,7 @@ nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 end_time = time.time()
 execution_time = end_time - start_time
 
-print(f"Shortest path: {shortest_path}")
-print(f"Execution time: {execution_time} seconds")
+print(f"Menor caminho: {shortest_path}")
+print(f"Tempo: {execution_time}s")
 
 plt.show()

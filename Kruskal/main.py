@@ -4,22 +4,32 @@ import time
 
 start_time = time.time()
 
+"""
+    aresta (alinha)
+O  --^--  O >VERTICE
+"""
 def kruskal(graph):
-    mst = []
+    agm = []
     edges = []
 
-    for node, neighbors in graph.items():
+    for vertice, neighbors in graph.items():
         for neighbor, weight in neighbors.items():
-            edges.append((weight, node, neighbor))
+            edges.append((weight, vertice, neighbor)) #peso vertice
 
+    print(edges,'<<<')
     edges.sort()
+    
+    print(edges,'<<<')
 
-    parent = {node: node for node in graph}
+    parent = {vertice: vertice for vertice in graph}
+    
+    print(parent,'<<<')
 
-    def find(node):
-        if parent[node] != node:
-            parent[node] = find(parent[node])
-        return parent[node]
+    def find(vertice):
+       # print(vertice, '>>')
+        if parent[vertice] != vertice:
+            parent[vertice] = find(parent[vertice])
+        return parent[vertice]
 
     def union(u, v):
         root_u = find(u)
@@ -27,32 +37,16 @@ def kruskal(graph):
         parent[root_u] = root_v
 
     for weight, u, v in edges:
+        
         if find(u) != find(v):
-            mst.append((u, v))
+            
+            print(weight,'<p', u, v, 'nao existe')
+            agm.append((u, v))
             union(u, v)
+            continue
+        print(weight,'<p', u, v, 'existe')
 
-    return mst
-
-def calculate_height(graph, minimum_spanning_tree):
-    def dfs(node, visited):
-        visited.add(node)
-        max_height = 0
-        for neighbor in graph[node]:
-            if neighbor not in visited:
-                height = dfs(neighbor, visited)
-                max_height = max(max_height, height)
-        return max_height + 1
-
-    heights = []
-    for start_node, end_node in minimum_spanning_tree:
-        visited = set()
-        height = dfs(start_node, visited)
-        heights.append(height)
-        visited = set()
-        height = dfs(end_node, visited)
-        heights.append(height)
-
-    return max(heights)
+    return agm
 
 graph = {
     '1': {'2': 20, '12': 29, '8': 29},
@@ -75,7 +69,7 @@ graph = {
     '18': {}
 }
 
-minimum_spanning_tree = kruskal(graph)
+arvore_geradora_mínima = kruskal(graph)
 
 G = nx.Graph()
 
@@ -87,16 +81,16 @@ for node, edges in graph.items():
     for edge, weight in edges.items():
         G.add_edge(node, edge, weight=weight)
 
-pos = nx.spring_layout(G)
+pos = nx.spring_layout(G, seed=344)
 
 edge_colors = ['black' for edge in G.edges()]
 node_colors = ['Yellow' for node in G.nodes()]
 
-for u, v in minimum_spanning_tree:
-    G[u][v]['color'] = 'red'
+for u, v in arvore_geradora_mínima:
+    G[u][v]['color'] = 'black'
 
 edges = G.edges()
-colors = [G[u][v].get('color', 'black') for u, v in edges]
+colors = [G[u][v].get('color', 'pink') for u, v in edges]
 
 nx.draw(G, pos, with_labels=True, node_color=node_colors, edge_color=colors, node_size=500, font_weight='bold')
 edge_labels = {(u, v): d['weight'] for u, v, d in G.edges(data=True) if 'weight' in d}
@@ -105,9 +99,17 @@ nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 end_time = time.time()
 execution_time = end_time - start_time
 
-height = calculate_height(graph, minimum_spanning_tree)
-print(f"Height of the minimum spanning tree: {height}")
+print(f"Arestas: {arvore_geradora_mínima}")
+peso_total_da_arvore_geradora_mínima = 0 
 
-print(f"Execution time: {execution_time} seconds")
+for arasta in arvore_geradora_mínima:
+
+    print(arasta, '>' ,'peso', '>', graph[arasta[0]][arasta[1]] )
+    peso_total_da_arvore_geradora_mínima += graph[arasta[0]][arasta[1]]
+
+print('peso total da arvore minima geradora:', peso_total_da_arvore_geradora_mínima)
+print(f"codigo executado em: {execution_time} segundos")
 
 plt.show()
+
+

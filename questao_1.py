@@ -19,9 +19,9 @@ def buscar_caminhos(graph):
 
     for path in all_paths:
         
-        #print(path[0])
-        #if int(path[0]) != 1: #para iterar apenas nas possibilidades do primeiro digito
-        #    return caminhos_com_pesos
+        print(path[0])
+        if int(path[0]) != 1: #para iterar apenas nas possibilidades do primeiro digito
+            return caminhos_com_pesos
         
         peso = 0
         valid_path = True
@@ -85,6 +85,6 @@ inverted_list = [(y, x) for x, y in arestas_caminho_menor_peso[::-1]]
 print("caminho de volta:", inverted_list)
 end_time = time.time()
 execution_time = end_time - start_time
-print(f"Execution time: {execution_time} seconds")
+print(f"Tempo de execução:  {execution_time}")
 
 plt.show()
